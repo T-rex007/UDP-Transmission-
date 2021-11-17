@@ -17,7 +17,6 @@ import time
 import sys
 import subprocess
 
-
 fifo_q = queue.Queue(maxsize = 10)
 
 
@@ -25,8 +24,8 @@ root_path = os.getcwd()
 video_name = "castaways.mp4"
 video_path = os.path.join(root_path, video_name)
 
-
 cap = cv2.VideoCapture(video_path)
+
 # Retrieve the frame rate of the video
 target_fps = cap.get(cv2.CAP_PROP_FPS)
 
@@ -35,13 +34,9 @@ frame_period = 1/target_fps
 
 print("Time taken for One period: ".format(frame_period))
 
-
-
-
 # This is server code to send video and audio frames over UDP/TCP
 # For details visit pyshine.com
 fifo_q = queue.Queue(maxsize=10)
-
 
 command = "ffmpeg -i {} -ab 160k -ac 2 -ar 44100 -vn {}".format(
     video_name, 'temp.wav')
@@ -53,7 +48,7 @@ server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
 host_name = socket.gethostname()
 host_ip = socket.gethostbyname(host_name)
 print(host_ip)
-port = 9688
+port = 9900
 socket_address = (host_ip, port)
 server_socket.bind(socket_address)
 print('Listening at:', socket_address)

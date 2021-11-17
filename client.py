@@ -38,9 +38,9 @@ def video_thread():
 
 		frame = cv2.imdecode(npdata, 1)
 		frame = cv2.putText(frame, 'Frame Rate: '+str(fps), (10, 40),
-		                    cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, ), 2)
+		                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0,0 ), 2)
 		frame = cv2.putText(frame, 'Frame Rate: '+str(fps), (10, 40),
-                      cv2.FONT_HERSHEY_SIMPLEX, 5, (0, 0,0 ), 2)
+                      cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0 ), 1)
 		cv2.imshow("RECEIVING VIDEO", frame)
 		key = cv2.waitKey(1) & 0xFF
 
