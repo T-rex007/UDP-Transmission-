@@ -24,9 +24,9 @@ port = 9900
 
 msg = b'hola'
 client_socket.sendto(msg, (host_ip, port))
+	
 
-
-def video_thread():
+def videoThread():
 
 	cv2.namedWindow('RECEIVING VIDEO')
 	cv2.moveWindow('RECEIVING VIDEO', 10, 360)
@@ -62,7 +62,7 @@ def video_thread():
 	cv2.destroyAllWindows()
 
 
-def audio_thread():
+def audioThread():
 
 	p = pyaudio.PyAudio()
 	CHUNK = 1024
@@ -107,5 +107,5 @@ def audio_thread():
 
 
 with ThreadPoolExecutor(max_workers=2) as executor:
-	executor.submit(audio_thread)
-	executor.submit(video_thread)
+	executor.submit(audioThread)
+	executor.submit(videoThread)

@@ -23,8 +23,12 @@ fifo_q = queue.Queue(maxsize = 10)
 root_path = os.getcwd()
 video_name = "castaways.mp4"
 video_path = os.path.join(root_path, video_name)
+camera_index = 0
 
-cap = cv2.VideoCapture(video_path)
+# Uing an mp4 video
+# cap = cv2.VideoCapture(video_path)
+
+cap = cv2.VideoCapture(camera_index)
 
 # Retrieve the frame rate of the video
 target_fps = cap.get(cv2.CAP_PROP_FPS)
@@ -81,7 +85,7 @@ def videoToQ():
     cap.release()
 
 
-def video_stream():
+def videoStream():
     global TS
     fps, st, frames_to_count, count = (0, 0, 1, 0)
     cv2.namedWindow('TRANSMITTING VIDEO')
@@ -120,18 +124,18 @@ def video_stream():
                 break
 
 
-def audio_stream():
+def audioStream():
     s = socket.socket()
     s.bind((host_ip, (port-1)))
 
     s.listen(5)
     CHUNK = 1024
-    wf = wave.open("temp.wav", 'rb')
+    # wf = wave.open("temp.wav", 'rb')
     p = pyaudio.PyAudio()
     print('server listening at', (host_ip, (port-1)))
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                    channels=wf.getnchannels(),
-                    rate=wf.getframerate(),
+    audio_stream = p.open(format=pyaudio.paInt16,
+                    channels=1,
+                    rate=44100,
                     input=True,
                     frames_per_buffer=CHUNK)
 
@@ -140,16 +144,16 @@ def audio_stream():
     while True:
         if client_socket:
             while True:
-                data = wf.readframes(CHUNK)
+                data = audio_stream(CHUNK)
                 a = pickle.dumps(data)
                 message = struct.pack("Q", len(a))+a
                 client_socket.sendall(message)
 
 
 with ThreadPoolExecutor(max_workers=3) as executor:
-    executor.submit(audio_stream)
+    executor.submit(audioStream)
     executor.submit(videoToQ)
-    executor.submit(video_stream)
+    executor.submit(videoStream)
 
 
 
