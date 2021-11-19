@@ -23,7 +23,7 @@ socket_address = (host_ip, port)
 
 def audioStream():
 	print('STARTING SERVER AT', socket_address, '...')
-
+	
 	server_socket.bind(socket_address)
 	server_socket.listen(backlog)
 	

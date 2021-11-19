@@ -65,7 +65,7 @@ totalNoFrames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 durationInSeconds = float(totalNoFrames) / float(target_fps)
 d = cap.get(cv2.CAP_PROP_POS_MSEC)
 print(durationInSeconds, d)
-
+backlog = 5
 FR_ADJUST = 0.001
 
 
@@ -124,34 +124,55 @@ def videoStream():
                 break
 
 
-def audioStream():
-    s = socket.socket()
-    s.bind((host_ip, (port-1)))
+# def audioStream():
+#     s = socket.socket()
+#     s.bind((host_ip, (port-1)))
 
-    s.listen(5)
-    CHUNK = 1024
-    # wf = wave.open("temp.wav", 'rb')
-    p = pyaudio.PyAudio()
-    print('server listening at', (host_ip, (port-1)))
-    audio_stream = p.open(format=pyaudio.paInt16,
-                    channels=1,
-                    rate=44100,
-                    input=True,
-                    frames_per_buffer=CHUNK)
+#     s.listen(5)
+#     CHUNK = 1024
+#     # wf = wave.open("temp.wav", 'rb')
+#     p = pyaudio.PyAudio()
+#     print('server listening at', (host_ip, (port-1)))
+#     audio_stream = p.open(format=pyaudio.paInt16,
+#                     channels=1,
+#                     rate=44100,
+#                     input=True,
+#                     frames_per_buffer=CHUNK)
 
-    client_socket, addr = s.accept()
+#     client_socket, addr = s.accept()
 
-    while True:
-        if client_socket:
-            while True:
-                data = audio_stream(CHUNK)
-                a = pickle.dumps(data)
-                message = struct.pack("Q", len(a))+a
-                client_socket.sendall(message)
+#     while True:
+#         if client_socket:
+#             while True:
+#                 data = audio_stream(CHUNK)
+#                 a = pickle.dumps(data)
+#                 message = struct.pack("Q", len(a))+a
+#                 client_socket.sendall(message)
+
+
+# def audioStream():
+# 	print('STARTING SERVER AT', socket_address, '...')
+
+# 	server_socket.bind(socket_address)
+# 	server_socket.listen(backlog)
+
+# 	while True:
+# 		client_socket, addr = server_socket.accept()
+# 		print('GOT CONNECTION FROM:', addr)
+# 		if client_socket:
+# 			while(True):
+# 				frame = audio.get()
+# 				a = pickle.dumps(frame)
+# 				message = struct.pack("Q", len(a))+a
+# 				client_socket.sendall(message)
+# 		else:
+# 			break
+# 	client_socket.close()
+
 
 
 with ThreadPoolExecutor(max_workers=3) as executor:
-    executor.submit(audioStream)
+    # executor.submit(audioStream)
     executor.submit(videoToQ)
     executor.submit(videoStream)
 
