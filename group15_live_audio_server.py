@@ -22,6 +22,7 @@ socket_address = (host_ip, port)
 print('STARTING SERVER AT', socket_address, '...')
 server_socket.bind(socket_address)
 server_socket.listen(backlog)
+fps, start_time, frames_to_count, cnt = (0, 0, 20, 0)
 
 while True:
 	client_socket, addr = server_socket.accept()
@@ -29,13 +30,22 @@ while True:
 	if client_socket:
 
 		while(True):
-        
 			frame = audio.get()
             # Serialize frame
 			a = pickle.dumps(frame)
 			message = struct.pack("Q", len(a))+a
 			client_socket.sendall(message)
-
+			
+			if cnt == frames_to_count:
+				try:
+					fps = round(frames_to_count/(time.time()-start_time))
+					start_time = time.time()
+					cnt = 0
+				except:
+					pass
+			cnt += 1
+			print(cnt)
+			print("FPS:", fps)
 	else:
 		break
 

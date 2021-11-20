@@ -1,4 +1,5 @@
 import socket
+import time
 import cv2
 import pickle
 import struct
@@ -23,7 +24,7 @@ socket_address = (host_ip, port)
 
 client_socket.connect(socket_address)
 print("Client program connected to: ", socket_address)
-
+fps, start_time, frames_to_count, cnt = (0, 0, 20, 0)
 data = b""
 payload_size = struct.calcsize("Q")
 while True:
@@ -35,6 +36,15 @@ while True:
 	packed_msg_size = data[:payload_size]
 	data = data[payload_size:]
 	msg_size = struct.unpack("Q", packed_msg_size)[0]
+	
+	if( cnt == frames_to_count):
+		try:
+			fps = round(frames_to_count/(time.time()-start_time))
+			start_time = time.time()
+			cnt = 0
+		except:
+			pass
+	cnt += 1
 
 	while len(data) < msg_size:
 		data += client_socket.recv(4*1024)
