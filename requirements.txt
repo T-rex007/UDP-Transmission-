@@ -3,3 +3,6 @@ socket
 numpy
 time
 base64
+pandas
+pyshine
+sounddevice

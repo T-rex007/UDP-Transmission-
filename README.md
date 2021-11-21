@@ -8,23 +8,20 @@ Install modules in requirement.txt
 pip3 install requirements.txt
 ```
 
-Install opencv
+## Install opencv
 
 ```pip install opencv-python```
 
-Intall 
+## Intall 
 ```pip install PyAudio```
 
-### Running program
+# Running program
 
-Run Server first 
+## Runing audio application 
+```python audio_run.py```
 
-```python server_V2.py```
-
-Then run the client
-
-```python client.py```
-
+## Running video application
+```python Video_Run.py```
 
 ## citations
 

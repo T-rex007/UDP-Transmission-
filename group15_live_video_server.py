@@ -1,13 +1,12 @@
 #!/usr/bin/python3
 """
-Authurs: Sana Aziz, 
-         Varune ...., 
-         Justin ...., 
+Authurs: Sana Aziz,
+         Varune ....,
+         Justin ....,
          Tyrel Cadogan
 email: tyrel.cadogan@my.uwi.edu
 Description: This is server code to send video frames over UDP
 """
-
 
 
 import cv2
@@ -16,7 +15,12 @@ import socket
 import numpy as np
 import time
 import base64
+import pandas as pd
+from datetime import datetime
 
+data_static = {"frame_rate": [],
+		"time_stamp": []
+}
 # Video source
 video_source = 0
 # for a 256 pixel image
@@ -50,14 +54,27 @@ while True:
 		message = base64.b64encode(buffer)
 		server_socket.sendto(message, client_addr)
         # Write frame per second on each frame
-		frame = cv2.putText(frame, 'FPS: '+str(fps), (10, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
-		frame = cv2.putText(frame, 'FPS: '+str(fps), (10, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 1)
+		frame = cv2.putText(frame, 'FPS: '+str(fps), (10, 40),
+		                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+		frame = cv2.putText(frame, 'FPS: '+str(fps), (10, 40),
+		                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 1)
 		cv2.imshow('TRANSMITTING VIDEO', frame)
 		key = cv2.waitKey(1) & 0xFF
 		if key == ord('q'):
 			server_socket.close()
 			break
 		if cnt == frames_to_count:
+			data_static['frame_rate'].append(fps)
+			data_static['time_stamp'].append(datetime.now().strftime("%H:%M:%S"))
+			tmp = data_static["frame_rate"]
+			tmp = [i for i in tmp]
+			try:
+				avg = sum(tmp)/len(tmp)
+				print("Recieve an AverageFrame rate of: ", avg)
+				pd.DataFrame(data_static).to_csv("Server_video_data.csv")
+			except:
+				pass
+				
 			try:
 				fps = round(frames_to_count/(time.time()-st))
 				st = time.time()

@@ -1,14 +1,20 @@
 import socket
 import time
+import pandas as pd
 import cv2
 import pickle
 import struct
 import pyshine as ps
+from datetime import datetime
 
 mode = 'get'
 name = 'CLIENT RECEIVING AUDIO'
 audio, context = ps.audioCapture(mode=mode)
 ps.showPlot(context, name)
+
+data_static = {"frame_rate": [],
+               "time_stamp": []
+               }
 
 # create socket with TCP connection
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,6 +44,16 @@ while True:
 	msg_size = struct.unpack("Q", packed_msg_size)[0]
 	
 	if( cnt == frames_to_count):
+		data_static['frame_rate'].append(fps)
+		data_static['time_stamp'].append(datetime.now().strftime("%H:%M:%S"))
+		tmp = data_static["frame_rate"]
+		tmp = [i for i in tmp]
+		try:
+			avg = sum(tmp)/len(tmp)
+			print("Recieve an AverageFrame rate of: ", avg)
+			pd.DataFrame(data_static).to_csv("Client_audio_data.csv")
+		except:
+			pass
 		try:
 			fps = round(frames_to_count/(time.time()-start_time))
 			start_time = time.time()
