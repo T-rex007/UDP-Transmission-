@@ -1,3 +1,12 @@
+#!/usr/bin/python3
+
+"""
+Description: This is server code to receive audio frames over TCP.
+Authurs: Sana Aziz - sana.aziz@my.uwi.edu, 
+         Varune Jaggernath - varune.jaggernath@my.uwi.edu, 
+         Justin Dookran - justin.dookran@my.uwi.edu,  
+         Tyrel Cadogan - tyrel.cadogan@my.uwi.edu,
+"""
 import socket
 import cv2
 import pickle

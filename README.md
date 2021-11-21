@@ -1,7 +1,13 @@
 # 3002 Case Study Code 
+<p>
+The Streaming applicationis in two four parts 2 parts for audio and two for video (server and client pairs). The two scripts for the streaming pplication are run in sequence automatically by calling audio_run.py or Video_Run.py
+</p>
+
 
 ## Setup 
 Open your virtual enviroment or you can create one
+
+```Python 3.8.10```
 
 Install modules in requirement.txt 
 ```
